@@ -1,10 +1,10 @@
-from sqlalchemy import Column, String, create_engine
+from sqlalchemy import Column, String, create_engine, Integer
 from flask_sqlalchemy import SQLAlchemy
 import json
 import os
 
 
-database_path = os.environ
+database_path = os.environ['DATABASE_URL']
 
 db = SQLAlchemy()
 
@@ -32,7 +32,7 @@ class Person(db.Model):
   catchphrase = Column(String)
 
   def __init__(self, name, catchphrase=""):
-    self.name = name
+    self.name = namex
     self.catchphrase = catchphrase
 
   def format(self):
