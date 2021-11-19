@@ -171,24 +171,24 @@ def verify_decode_jwt(token):
     return the decorator which passes the decoded payload to the decorated method
 '''
 def requires_auth(permission=''):
-    def requires_auth_decorator(f)
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        token = get_token_auth_header()
-        try:
-            payload = verify_decode_jwt(token)
-        except:
-            raise AuthError({
-                'code': 'invalid_token',
-                'description': 'Access denied due to invalid token'
-            }, 401)
+    def requires_auth_decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            token = get_token_auth_header()
+            try:
+                payload = verify_decode_jwt(token)
+            except:
+                raise AuthError({
+                    'code': 'invalid_token',
+                    'description': 'Access denied due to invalid token'
+                }, 401)
 
-        check_permissions(permission, payload)
+            check_permissions(permission, payload)
 
-        return f(payload, *arg, **kwargs)
+            return f(payload, *arg, **kwargs)
 
-    return wrapper
-return requires_auth_decorator
+        return wrapper
+    return requires_auth_decorator
 
 
 
