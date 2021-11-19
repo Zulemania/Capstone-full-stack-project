@@ -63,7 +63,7 @@ def create_app(test_config=None):
             'success': True,
             'created_actor': actor.name,
             'total_actors': len(Actor.query.all())
-        })
+        }), 200
 
     @app.route('/actors/<int:id>', methods=['PATCH'])
     @requires_auth('patch:actors')
@@ -129,6 +129,67 @@ def create_app(test_config=None):
             'success': True,
             'movie': movie.format()
         })
+
+    @app.route('/movies/<int:id>', methods=['POST'])
+    @requires_auth('post:movies')
+    def post_movie(payload):
+        if request.method == 'POST':
+            body = request.get_json()
+            title = body.get('title', None)
+            release_year = body.get('release_year', None)
+            genre = body.get('genre', None)
+
+        movie = Movie(title=title, release_year=release_year, genre=genre)
+        movie.insert()
+
+        return jsonify({
+            'success': True,
+            'created_movie': movie.id,
+            'total_actors': len(Movie.query.all())
+        }), 200
+
+
+    @app.route('/movies/<int:id>', methods=['PATCH'])
+    @requires_auth('patch:movies')
+    def patch_movie(payload, id):
+        if request.method == "PATCH":
+            body = request.get_json()
+            title = body.get('title', None)
+            release_year = body.get('release_year', None)
+            genre = body.get('genre', None)
+
+
+            movie.title = title
+            movie.release_year = release_year
+            movie.genre = genre
+
+            movie.update()
+
+            return jsonify({
+            'success': True,
+            'updated_movie': id,
+            'total_movies': len(Movie.query.all())
+        })
+
+    @app.route('/movies/<int:id>', methods=['DELETE'])
+    @requires_auth('delete:movies')
+    def delete_movie(payload, id):
+        movie = Movie.query.filter_by(id=id).one_or_none()
+
+        if movie is None:
+            abort(404)
+
+        movie.delete()
+
+        return jsonify({
+            'success': True,
+            'deleted_movie': id,
+            'total_movies': len(Movie.query.all())
+        }), 200
+
+    
+
+    
 
     
 
