@@ -2,7 +2,9 @@ import os
 from flask import (Flask, jsonify, request, abort)
 from models import setup_db
 from flask_cors import CORS
-from models import setup_db
+from models import setup_db, Actor, Movie
+from auth.auth import AuthError, requires_auth
+
 
 def create_app(test_config=None):
 
@@ -15,12 +17,133 @@ def create_app(test_config=None):
     def get_greeting():
         return jsonify({
             'success': True,
-            'message': 'Alive!!!'
+            'message': 'Finally, it works!!!'
         })
         
     @app.route('/coolkids')
     def be_cool():
         return "Be cool, man, be coooool! You're almost a FSND grad!"
+
+    @app.route('/actors', methods=['Get'])
+    @requires_auth("get:actors")
+    def get_all_actors(payload):
+        actor = Actor.query.order_by(Actor.id).all()
+        actors = [actor.format() for actor in actors]
+        
+
+        return jsonify({
+            'success':True,
+            'actors': actors
+        }), 200
+
+    @app.route('/actors/<int:id>', methods=['GET'])
+    @requires_auth("get:actors-info")
+    def get_particular_actor(payload, id):
+        actor = Actor.query.filter_by(id=id).one_or_none()
+        if actor is None:
+            abort(404)
+        return jsonify({
+            'success': True,
+            'actor': actor.format()
+        })
+
+    @app.route('/actors/<int:id>', methods=['POST'])
+    @requires_auth('post:actors')
+    def post_actor(payload):
+        if request.method == 'POST':
+            body = request.get_json()
+            name = body.get('name', None)
+            age = body.get('age', None)
+            gender = body.get('gender', None)
+
+        actor = Actor(name=name, age=age, gender=gender)
+        actor.insert()
+
+        return jsonify({
+            'success': True,
+            'created_actor': actor.name,
+            'total_actors': len(Actor.query.all())
+        })
+
+    @app.route('/actors/<int:id>', methods=['PATCH'])
+    @requires_auth('patch:actors')
+    def patch_actor(payload, id):
+        if request.method == "PATCH":
+            body = request.get_json()
+            name = body.get('name', None)
+            age = body.get('age', None)
+            gender = body.get('gender', None)
+
+            actor = Actor.query.filter_by(id=id).one_or_none()
+
+            if actor is None:
+                abort(404)
+
+            actor.name = name
+            actor.age = age
+            actor.gender = gender
+            actor.update()
+
+            return jsonify({
+            'success': True,
+            'updated_actor': id,
+            'total_actors': len(Actor.query.all())
+        })
+
+    @app.route('/actors/<int:id>', methods=['DELETE'])
+    @requires_auth('delete:actors')
+    def delete_actor(payload, id):
+        actor = Actor.query.filter_by(id=id).one_or_none()
+
+        if actor is None:
+            abort(404)
+
+        actor.delete()
+
+        return jsonify({
+            'success': True,
+            'deleted_actor': id,
+            'total_actors': len(Actor.query.all())
+        }), 200
+
+    @app.route('/movies', methods=['Get'])
+    @requires_auth("get:movies")
+    def get_all_movies(payload):
+        movies = Movie.query.order_by(Movie.id).all()
+        movies = [movie.format() for movie in movies]
+        
+
+        return jsonify({
+            'success':True,
+            'movies': movies
+        }), 200
+
+    @app.route('/movies/<int:id>', methods=['GET'])
+    @requires_auth("get:movies-info")
+    def get_particular_movie(payload, id):
+        movie = Movie.query.filter_by(id=id).one_or_none()
+
+        if movie is None:
+            abort(404)
+        return jsonify({
+            'success': True,
+            'movie': movie.format()
+        })
+
+    
+
+
+
+    
+
+
+
+        
+
+
+        
+        
+
 
     return app
 
