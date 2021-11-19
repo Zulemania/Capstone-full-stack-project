@@ -2,6 +2,7 @@ alembic==1.5.8
 appdirs==1.4.4
 astroid==2.4.2
 awscli==1.20.1
+backports.entry-points-selectable==1.1.1
 botocore==1.21.1
 click==7.1.2
 colorama==0.4.3
@@ -23,6 +24,7 @@ lazy-object-proxy==1.4.3
 Mako==1.1.4
 MarkupSafe==1.1.1
 mccabe==0.6.1
+platformdirs==2.4.0
 psycopg2-binary==2.8.6
 pyasn1==0.4.8
 pycodestyle==2.6.0

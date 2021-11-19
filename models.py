@@ -44,7 +44,7 @@ class Actor(db.Model):
   def __init__(self, name, age, gender):
       self.name = name
       self.age = age
-      self.gender= gender
+      self.gender = gender
 
   def insert(self):
       db.session.add(self)
@@ -67,3 +67,47 @@ class Actor(db.Model):
       'gender': self.gender,
       'create_time': self.create_time
     }
+
+class Movie(db.Model):
+    __tablename__ = 'movies'
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    release_year = Column(Integer, nullable=False)
+    genre = Column(String, nullable=False)
+    create_time = Column(DateTime, default=datetime.datetime.utcnow)
+
+    cast = db.relationship(
+      'Actor',
+      secondary=actor_movie,
+      backref=db.backref(
+        'movies',
+        lazy=True))
+
+def __init__(self, title, release_year, genre):
+    self.title = title
+    self.release_year = release_year
+    self.genre = genre
+
+def insert(self):
+    db.session.add(self)
+    db.session.commit()
+
+def delete(self):
+    db.session.delete(self)
+    db.session.commit()
+
+def update(self):
+    db.session.commit()
+
+def __repr__(self):
+    return f'<self.id - {self.title} - {self.release_year}>'
+
+def format(self):
+  return{
+    'id': self.id,
+    'title': self.title,
+    'release_year': self.release_year,
+    'duration': self.duration
+  }
+
