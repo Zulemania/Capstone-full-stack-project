@@ -63,15 +63,30 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_create_actors_without_token(self):
-        res = self.client().get('/actors', json=self.new_actor)
+        res = self.client().post('/actors', json=self.new_actor)
         self.assertEqual(res.status_code, 401)
 
     def test_create_actors_with_valid_token(self):
-        res = self.client().get('/actors', 
+        res = self.client().post('/actors', 
         headers={
             "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"}, 
             json=self.new_actor)
         self.assertEqual(res.status_code, 200)
+
+    def test_patch_actors_without_token(self):
+        res = self.client().patch('/actors/3', json=self.new_actor)
+        self.assertEqual(res.status_code, 401)
+
+    def test_patch_actors_with_valid_token(self):
+        res = self.client().patch('/actors/3', 
+        headers={
+            "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"}, 
+            json=self.new_actor)
+        self.assertEqual(res.status_code, 200)
+
+    
+
+    
 
 
     
