@@ -19,9 +19,10 @@ SET row_security = off;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+SET DateStyle TO YMD;
 
 --
--- Name: actor_movie; Type: TABLE; Schema: public; Owner: postgres
+-- Name: actor_movie; Type: TABLE; Schema: public; Owner: cynthiachisom
 --
 
 CREATE TABLE public.actor_movie (
@@ -29,23 +30,23 @@ CREATE TABLE public.actor_movie (
     movie_id integer NOT NULL
 );
 
-ALTER TABLE public.actor_movie OWNER TO postgres;
+ALTER TABLE public.actor_movie OWNER TO cynthiachisom;
 
 --
--- Name: actors; Type: TABLE; Schema: public; Owner: postgres
+-- Name: actors; Type: TABLE; Schema: public; Owner: cynthiachisom
 --
 
 CREATE TABLE public.actors (
     id integer NOT NULL,
-    name character varying NOT NULL,
-    age integer NOT NULL,
-    gender character varying NOT NULL
+    name text,
+    age integer,
+    gender text
 );
 
-ALTER TABLE public.actors OWNER TO postgres
+ALTER TABLE public.actors OWNER TO cynthiachisom;
 
 --
--- Name: actor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: actor_id_seq; Type: SEQUENCE; Schema: public; Owner: cynthiachisom
 --
 
 CREATE SEQUENCE public.actors_id_seq
@@ -57,30 +58,29 @@ CREATE SEQUENCE public.actors_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.categories_id_seq OWNER TO postgres;
+ALTER TABLE public.actors_id_seq OWNER TO cynthiachisom;
 
 --
--- Name categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name actors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cynthiachisom
 --
 
 ALTER SEQUENCE public.actors_id_seq OWNED BY public.actors.id;
 
 --
--- Name: movies; Type; Schema: public; Owner: postgres
+-- Name: movies; Type; Schema: public; Owner: cynthiachisom
 --
 
 CREATE TABLE public.movies (
     id integer NOT NULL,
-    title character varying NOT NULL,
-    release_year integer NOT NULL,
-    genre character varying NOT NULL
+    title text,
+    release_year timestamp without time zone
 );
 
 
-ALTER TABLE public.movies OWNER TO postgres;
+ALTER TABLE public.movies OWNER TO cynthiachisom;
 
 --
--- Name: movies_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: movies_id_seq; Type: SEQUENCE; Schema: public; Owner: cynthiachisom
 --
 
 
@@ -93,105 +93,103 @@ CREATE SEQUENCE public.movies_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.movies_id_seq OWNER TO postgres;
+ALTER TABLE public.movies_id_seq OWNER TO cynthiachisom;
 
 --
--- Name: movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cynthiachisom
 --
 
 
 ALTER SEQUENCE public.movies_id_seq OWNED BY public.movies.id;
 
 --
--- Name movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: cynthiachisom
 --
 
 ALTER TABLE ONLY public.actors ALTER COLUMN id SET DEFAULT nextval('public.actors_id_seq'::regclass);
 
 --
--- Name movies id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name movies id; Type: DEFAULT; Schema: public; Owner: cynthiachisom
 --
 
-ALTER TABLES ONLY public.movies ALTER COLUMN id SET DEFAULT nextval('public.movies_id_seq'::regclass);
+ALTER TABLE ONLY public.movies ALTER COLUMN id SET DEFAULT nextval('public.movies_id_seq'::regclass);
 
 --
--- Data for Name: actor_movie; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: actor_movie; Type: TABLE DATA; Schema: public; Owner: cynthiachisom
 --
 
 COPY public.actor_movie (actor_id, movie_id) FROM stdin;
 \.
 
 --
--- Data for Name: actors; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: actors; Type: TABLE DATA; Schema: public; Owner: cynthiachisom
 --
 
 COPY public.actors (id, name, age, gender) FROM stdin;
-
-1   Zachary Levi   41  M
-2   Joaquin Phoenix  47   M
-3   Brie Larson    32   F
-4   Anne Hathaway   39   F
-5   Ed Helms   47   M
-6   Tom Hardy   44   M
+1	Zachary levi	45	M
+2	Joaquin Phoenix	47	M
+3	Brie Larson	34	F
+4	Anne Hathaway	39	F
+5	Ed Helms	47	M
+6	Tom Hardy	44	M
 \.
 
 --
--- Data for Name: movies; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: movies; Type: TABLE DATA; Schema: public; Owner: cynthiachisom
 --
 
-COPY public.movies (id, title, release_year, genre) FROM stdin;
-
-1   Shazam   2019-04-05   Adventure
-2   Joker   2019-19-14   Thriller
-3   Just Mercy   2019-12-25   Drama
-4   The Intern   2015-09-25   Drama
-5   Vacation   2015-07-29   Comedy
-6   Mad Max   2015-05-15   Action
+COPY public.movies (id, title, release_year) FROM stdin;
+1	Shazam	2019-04-05 00:00:00
+2	Joker	2019-04-19 00:00:00
+3	Just Mercy	2019-12-25 00:00:00
+4	The Intern	2015-09-25 00:00:00
+5	Mad max	2015-05-15 00:00:00
+6	Vacation	2015-07-29 00:00:00
 \.
 
 
 --
--- Name: actors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: actors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: cynthiachisom
 --
 
 SELECT pg_catalog.setval('public.actors_id_seq', 2, true);
 
 --
--- Name: movies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: movies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: cynthiachisom
 --
 
 SELECT pg_catalog.setval('public.movies_id_seq', 6, true);
 
 --
--- Name: actors_movie actor_movie_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: actors_movie actor_movie_pkey; Type: CONSTRAINT; Schema: public; Owner: cynthiachisom
 --
 
 ALTER TABLE ONLY public.actor_movie
     ADD CONSTRAINT actor_movie_pkey PRIMARY KEY (actor_id, movie_id);
 
 --
--- Name: actors actors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: actors actors_pkey; Type: CONSTRAINT; Schema: public; Owner: cynthiachisom
 --
 
 ALTER TABLE ONLY public.actors
     ADD CONSTRAINT actors_pkey PRIMARY KEY (id);
 
 --
--- Name: movies movies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: movies movies_pkey; Type: CONSTRAINT; Schema: public; Owner: cynthiachisom
 --
 
 ALTER TABLE ONLY public.movies
     ADD CONSTRAINT movies_pkey PRIMARY KEY (id);
 
 --
--- Name: actor_movie actor_movie_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: actor_movie actor_movie_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cynthiachisom
 --
 
 ALTER TABLE ONLY public.actor_movie
     ADD CONSTRAINT actor_movie_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.actors(id);
 
 --
--- Name: actor_movie actor_movie_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: actor_movie actor_movie_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cynthiachisom
 --
 
 ALTER TABLE ONLY public.actor_movie
