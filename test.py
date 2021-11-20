@@ -130,6 +130,21 @@ class CapstoneTestCase(unittest.TestCase):
             json=self.new_movie)
         self.assertEqual(res.status_code, 200)
 
+    def test_patch_movies_without_token(self):
+        res = self.client().patch('/movies/3', json=self.new_movie)
+        self.assertEqual(res.status_code, 401)
+
+    def test_patch_movies_with_valid_token(self):
+        res = self.client().patch('/movies/3', 
+        headers={
+            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"}, 
+            json=self.new_movie)
+        self.assertEqual(res.status_code, 200)
+
+    
+
+    
+
     
 
     
