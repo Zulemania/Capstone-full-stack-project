@@ -15,10 +15,10 @@ def create_app(test_config=None):
 
     @app.route('/')
     def get_greeting():
-        return jsonify({
-            'success': True,
-            'message': 'Finally, it works!!!'
-        })
+        excited = os.environ['EXCITED']
+        greeting = "Hello" 
+        if excited == 'true': greeting = greeting + "!!!!!"
+        return greeting
         
     @app.route('/coolkids')
     def be_cool():
