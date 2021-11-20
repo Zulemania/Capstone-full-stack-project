@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, create_engine, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, create_engine, DateTime ,Integer, ForeignKey
 from flask_sqlalchemy import SQLAlchemy
 import json
 import os
@@ -39,7 +39,7 @@ class Actor(db.Model):
   name = Column(String, nullable=False)
   age = Column(Integer, nullable=False)
   gender = Column(String, nullable=False)
-  create_time = Column(DateTime, default=datetime.datetime.utcnow)
+
 
   def __init__(self, name, age, gender):
       self.name = name
@@ -64,8 +64,7 @@ class Actor(db.Model):
     return {
       'id': self.id,
       'name': self.name,
-      'gender': self.gender,
-      'create_time': self.create_time
+      'gender': self.gender
     }
 
 class Movie(db.Model):
@@ -74,8 +73,7 @@ class Movie(db.Model):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     release_year = Column(Integer, nullable=False)
-    genre = Column(String, nullable=False)
-    create_time = Column(DateTime, default=datetime.datetime.utcnow)
+
 
     cast = db.relationship(
       'Actor',
@@ -84,10 +82,10 @@ class Movie(db.Model):
         'movies',
         lazy=True))
 
-def __init__(self, title, release_year, genre):
+def __init__(self, title, release_year):
     self.title = title
     self.release_year = release_year
-    self.genre = genre
+
 
 def insert(self):
     db.session.add(self)
@@ -107,7 +105,7 @@ def format(self):
   return{
     'id': self.id,
     'title': self.title,
-    'release_year': self.release_year,
-    'duration': self.duration
+    'release_year': self.release_year
   }
+
 
