@@ -42,6 +42,8 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['message'], 'Alive!!!')
 
+## TESTS FOR ACTORS
+
     def test_get_actors_without_token(self):
         res = self.client().get('/actors')
         self.assertEqual(res.status_code, 401)
@@ -83,6 +85,26 @@ class CapstoneTestCase(unittest.TestCase):
             "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"}, 
             json=self.new_actor)
         self.assertEqual(res.status_code, 200)
+
+    def test_delete_actors_without_token(self):
+        res = self.client().delete('/actors/5')
+        self.assertEqual(res.status_code, 401)
+
+    def test_delete_actors_with_valid_token(self):
+        res = self.client().delete('/actors/5', 
+        headers={
+            "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"})
+        self.assertEqual(res.status_code, 200)
+
+
+## TESTS FOR MOVIES
+
+
+
+
+    
+
+    
 
     
 
