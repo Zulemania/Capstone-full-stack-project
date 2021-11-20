@@ -127,12 +127,12 @@ COPY public.actor_movie (actor_id, movie_id) FROM stdin;
 
 COPY public.actors (id, name, age, gender) FROM stdin;
 
-1   Denzel Washington   66   M
-2   Thomas Middleditch  39   M
-3   Amanda Crew    35   F
-4   Martin Starr   39   M
-5   Emily Chang   41   F
-6   Suzanne Cryer   54   F
+1   Zachary Levi   41  M
+2   Joaquin Phoenix  47   M
+3   Brie Larson    32   F
+4   Anne Hathaway   39   F
+5   Ed Helms   47   M
+6   Tom Hardy   44   M
 \.
 
 --
@@ -154,12 +154,49 @@ COPY public.movies (id, title, release_year, genre) FROM stdin;
 -- Name: actors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.actors_id_seq', 12, true);
+SELECT pg_catalog.setval('public.actors_id_seq', 2, true);
 
 --
 -- Name: movies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
+SELECT pg_catalog.setval('public.movies_id_seq', 6, true);
 
+--
+-- Name: actors_movie actor_movie_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
 
+ALTER TABLE ONLY public.actor_movie
+    ADD CONSTRAINT actor_movie_pkey PRIMARY KEY (actor_id, movie_id);
 
+--
+-- Name: actors actors_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actors
+    ADD CONSTRAINT actors_pkey PRIMARY KEY (id);
+
+--
+-- Name: movies movies_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movies
+    ADD CONSTRAINT movies_pkey PRIMARY KEY (id);
+
+--
+-- Name: actor_movie actor_movie_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_movie
+    ADD CONSTRAINT actor_movie_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.actors(id);
+
+--
+-- Name: actor_movie actor_movie_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_movie
+    ADD CONSTRAINT actor_movie_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.movies(id);
+
+--
+-- PostgreSQL database dump complete
+--
