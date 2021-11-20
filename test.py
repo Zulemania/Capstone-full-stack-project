@@ -59,7 +59,7 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 401)
 
     def test_get_particular_actor_with_valid_token(self):
-        res = self.client().get('/actors', 
+        res = self.client().get('/actors/3', 
         headers={
             "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"})
         self.assertEqual(res.status_code, 200)
@@ -108,6 +108,33 @@ class CapstoneTestCase(unittest.TestCase):
         headers={
             "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"})
         self.assertEqual(res.status_code, 200)
+
+    def test_get_particular_movie_without_token(self):
+        res = self.client().get('/movies/5')
+        self.assertEqual(res.status_code, 401)
+
+    def test_get_particular_movie_with_valid_token(self):
+        res = self.client().get('/movies/5', 
+        headers={
+            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"})
+        self.assertEqual(res.status_code, 200)
+
+    def test_create_movies_without_token(self):
+        res = self.client().post('/actors', json=self.new_movie)
+        self.assertEqual(res.status_code, 401)
+
+    def test_create_movies_with_valid_token(self):
+        res = self.client().post('/movies', 
+        headers={
+            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"}, 
+            json=self.new_movie)
+        self.assertEqual(res.status_code, 200)
+
+    
+
+    
+
+    
 
     
 
