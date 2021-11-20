@@ -141,33 +141,18 @@ class CapstoneTestCase(unittest.TestCase):
             json=self.new_movie)
         self.assertEqual(res.status_code, 200)
 
-    
+    def test_delete_movies_without_token(self):
+        res = self.client().delete('/movies/5')
+        self.assertEqual(res.status_code, 401)
 
-    
-
-    
-
-    
-
-    
-
-    
+    def test_delete_movies_with_valid_token(self):
+        res = self.client().delete('/movies/5', 
+        headers={
+            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"})
+        self.assertEqual(res.status_code, 200)
 
 
 
 
-    
-
-    
-
-    
-
-    
-
-
-    
-
-
-
-
-    
+if __name__ == "__main__":
+    unittest.main()
