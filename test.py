@@ -1,6 +1,6 @@
 import os
 import unittest
-import json 
+import sys, json 
 from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import setup_db, Actor, Movie
@@ -25,134 +25,26 @@ class CapstoneTestCase(unittest.TestCase):
             "title": "The Equalizer",
             "realease_year": 2014
         }
-
+    
+    #binds the app to the current context
     with self.app.app_context():
         self.db = SQLAlchemy()
         self.db.init(self.app)
-
+        #create all tables
         self.db.create_all()
 
     def teardown(self):
+        """Executed after each test"""
         pass
 
     def test_health(self):
+        #Test for GET health endpoint
         res = self.client().get('/')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['message'], 'Alive!!!')
 
-## TESTS FOR ACTORS
-
-    def test_get_actors_without_token(self):
-        res = self.client().get('/actors')
-        self.assertEqual(res.status_code, 401)
-
-    def test_get_actors_with_valid_token(self):
-        res = self.client().get('/actors', 
-        headers={
-            "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"})
-        self.assertEqual(res.status_code, 200)
-
-    def test_get_particular_actor_without_token(self):
-        res = self.client().get('/actors/3')
-        self.assertEqual(res.status_code, 401)
-
-    def test_get_particular_actor_with_valid_token(self):
-        res = self.client().get('/actors/3', 
-        headers={
-            "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"})
-        self.assertEqual(res.status_code, 200)
-
-    def test_create_actors_without_token(self):
-        res = self.client().post('/actors', json=self.new_actor)
-        self.assertEqual(res.status_code, 401)
-
-    def test_create_actors_with_valid_token(self):
-        res = self.client().post('/actors', 
-        headers={
-            "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"}, 
-            json=self.new_actor)
-        self.assertEqual(res.status_code, 200)
-
-    def test_patch_actors_without_token(self):
-        res = self.client().patch('/actors/3', json=self.new_actor)
-        self.assertEqual(res.status_code, 401)
-
-    def test_patch_actors_with_valid_token(self):
-        res = self.client().patch('/actors/3', 
-        headers={
-            "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"}, 
-            json=self.new_actor)
-        self.assertEqual(res.status_code, 200)
-
-    def test_delete_actors_without_token(self):
-        res = self.client().delete('/actors/5')
-        self.assertEqual(res.status_code, 401)
-
-    def test_delete_actors_with_valid_token(self):
-        res = self.client().delete('/actors/5', 
-        headers={
-            "Authorizaton": f"Bearer {self.CASTING_DIRECTOR}"})
-        self.assertEqual(res.status_code, 200)
-
-
-## TESTS FOR MOVIES
-
-    def test_get_movies_without_token(self):
-        res = self.client().get('/movies')
-        self.assertEqual(res.status_code, 401)
-
-    def test_get_movies_with_valid_token(self):
-        res = self.client().get('/movies', 
-        headers={
-            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"})
-        self.assertEqual(res.status_code, 200)
-
-    def test_get_particular_movie_without_token(self):
-        res = self.client().get('/movies/5')
-        self.assertEqual(res.status_code, 401)
-
-    def test_get_particular_movie_with_valid_token(self):
-        res = self.client().get('/movies/5', 
-        headers={
-            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"})
-        self.assertEqual(res.status_code, 200)
-
-    def test_create_movies_without_token(self):
-        res = self.client().post('/actors', json=self.new_movie)
-        self.assertEqual(res.status_code, 401)
-
-    def test_create_movies_with_valid_token(self):
-        res = self.client().post('/movies', 
-        headers={
-            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"}, 
-            json=self.new_movie)
-        self.assertEqual(res.status_code, 200)
-
-    def test_patch_movies_without_token(self):
-        res = self.client().patch('/movies/3', json=self.new_movie)
-        self.assertEqual(res.status_code, 401)
-
-    def test_patch_movies_with_valid_token(self):
-        res = self.client().patch('/movies/3', 
-        headers={
-            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"}, 
-            json=self.new_movie)
-        self.assertEqual(res.status_code, 200)
-
-    def test_delete_movies_without_token(self):
-        res = self.client().delete('/movies/5')
-        self.assertEqual(res.status_code, 401)
-
-    def test_delete_movies_with_valid_token(self):
-        res = self.client().delete('/movies/5', 
-        headers={
-            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"})
-        self.assertEqual(res.status_code, 200)
-
-
-
-
+#Make the tests convieniently executable
 if __name__ == "__main__":
     unittest.main()

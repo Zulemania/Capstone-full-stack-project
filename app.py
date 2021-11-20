@@ -1,5 +1,6 @@
 import os
 from flask import (Flask, jsonify, request, abort)
+from flask_sqlalchemy import SQLAlchemy
 from models import setup_db
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
@@ -226,7 +227,6 @@ def create_app(test_config=None):
             "error": 500,
             "message": "internal server error"
         }), 500
-
 
 
 
