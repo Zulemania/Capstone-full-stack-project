@@ -99,6 +99,18 @@ class CapstoneTestCase(unittest.TestCase):
 
 ## TESTS FOR MOVIES
 
+    def test_get_movies_without_token(self):
+        res = self.client().get('/movies')
+        self.assertEqual(res.status_code, 401)
+
+    def test_get_movies_with_valid_token(self):
+        res = self.client().get('/movies', 
+        headers={
+            "Authorizaton": f"Bearer {self.EXECUTIVE_PRODUCER}"})
+        self.assertEqual(res.status_code, 200)
+
+    
+
 
 
 
