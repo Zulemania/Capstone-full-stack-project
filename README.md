@@ -100,6 +100,6 @@ GET '\'
 - Example response
 {
     "success": true,
-    "message": "message":"Finally, it works!!!"
+    "message":"Finally, it works!!!"
 }
 ```
