@@ -93,13 +93,24 @@ The `FLASK_ENV` variable to `development` flag will detect file changes and rest
 
 ## Endpoints
 
-GET ' \ '
+GET ' / '
 - root endpoint
 - requires no authentication
 - Example request: https://film-magic.herokuapp.com/
-- Example response
+- Example response:
+```
 {
     "success": true,
     "message":"Finally, it works!!!"
 }
+```
+
+## TESTING
+
+For testing the app, run the following commands () 
+```
+dropdb capstone
+createdb capstone
+psql capstone < capstone.psql
+python test.py
 ```
