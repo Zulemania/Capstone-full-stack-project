@@ -93,7 +93,7 @@ The `FLASK_ENV` variable to `development` flag will detect file changes and rest
 
 ## Endpoints
 
-GET '\'
+GET ' \ '
 - root endpoint
 - requires no authentication
 - Example request: https://film-magic.herokuapp.com/
