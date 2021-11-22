@@ -52,17 +52,17 @@ This will install all of the required packages we selected within the `requireme
  - Define your Procfile
  - Push your code to github
  - Connect your repository to heroku
- - Click on deploy option
+ - Click on the deploy option
 
 ### Running the server
 
-First, you have to start the postgresql swrvice by running the following command
+First, you have to start the postgresql service by running the following command
 
 ```bash
 brew services start postgresql
 ```
 
-Then, createdb by running
+Then, create database by running
 ```
 dropdb capstone
 createdb capstone
@@ -91,7 +91,7 @@ flask run
 The `FLASK_ENV` variable to `development` flag will detect file changes and restart server automatically.
 
 
-## Endpoints
+## ENDPOINTS
 
 GET ' / '
 - root endpoint

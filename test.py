@@ -27,11 +27,11 @@ class CapstoneTestCase(unittest.TestCase):
         }
     
     #binds the app to the current context
-    with self.app.app_context():
-        self.db = SQLAlchemy()
-        self.db.init(self.app)
-        #create all tables
-        self.db.create_all()
+        with self.app.app_context():
+            self.db = SQLAlchemy()
+            self.db.init_app(self.app)
+    #create all tables
+            self.db.create_all()
 
     def teardown(self):
         """Executed after each test"""
@@ -43,7 +43,13 @@ class CapstoneTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['message'], 'Alive!!!')
+        self.assertEqual(data['message'], 'Finally, it works!!!')
+
+    def test_get_actors_without_token(self):
+        res = self.client().get('/actors')
+        
+        self.assertEqual(res.status_code, 401)
+
 
 #Make the tests convieniently executable
 if __name__ == "__main__":
