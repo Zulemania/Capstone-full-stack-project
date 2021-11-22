@@ -174,21 +174,18 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            token = get_token_auth_header()
             try:
+                token = get_token_auth_header()
                 payload = verify_decode_jwt(token)
-            except:
-                raise AuthError({
-                    'code': 'invalid_token',
-                    'description': 'Access denied due to invalid token'
-                }, 401)
-
-            check_permissions(permission, payload)
-
-            return f(payload, *arg, **kwargs)
+                check_permissions(permission, payload)
+            except Exception:
+                abort(401)
+            return f(payload, *args, **kwargs)
 
         return wrapper
+        
     return requires_auth_decorator
+
 
 
 

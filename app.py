@@ -1,10 +1,17 @@
 import os
-from flask import (Flask, jsonify, request, abort)
+from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from models import setup_db
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
+
 from auth.auth import AuthError, requires_auth
+from six.moves.urllib.parse import urlencode
+
+from functools import wraps
+from datetime import datetime
+
+
 
 
 def create_app(test_config=None):
@@ -12,6 +19,10 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
+
+    #Uncomment the following line on the initial run to setup
+    #the required tables in the database
+    #db_drop_and_create_all()
     
 
     @app.route('/')
@@ -28,14 +39,19 @@ def create_app(test_config=None):
     @app.route('/actors', methods=['Get'])
     @requires_auth("get:actors")
     def get_all_actors(payload):
-        actor = Actor.query.order_by(Actor.id).all()
-        actors = [actor.format() for actor in actors]
-        
+        try:
+            actors_query = Actor.query.order_by(Actor.id).all()
+            actors = [actor.short() for actor in actors_query]
+            if not result:
+                abort(400)
+            return jsonify({
+                'success': True,
+                'actors': actors
+            }), 200
+        except():
+            abort(500)
 
-        return jsonify({
-            'success':True,
-            'actors': actors
-        }), 200
+
 
     @app.route('/actors/<int:id>', methods=['GET'])
     @requires_auth("get:actors-info")
@@ -48,9 +64,12 @@ def create_app(test_config=None):
             'actor': actor.format()
         })
 
+
+
     @app.route('/actors/<int:id>', methods=['POST'])
     @requires_auth('post:actors')
     def post_actor(payload):
+
         if request.method == 'POST':
             body = request.get_json()
             name = body.get('name', None)
@@ -195,6 +214,14 @@ def create_app(test_config=None):
             "error": 400,
             "message": "bad request"
         }), 400
+
+    @app.errorhandler(401)
+    def not_found(error):
+        return jsonify({
+            "success": False,
+            "error": 401,
+            "message": "unauthorized request"
+        }), 404
 
     @app.errorhandler(404)
     def not_found(error):

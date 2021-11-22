@@ -99,7 +99,7 @@ def update(self):
     db.session.commit()
 
 def __repr__(self):
-    return f'<self.id - {self.title} - {self.release_year}>'
+    return f'<{self.id} - {self.title} - {self.release_year}>'
 
 def format(self):
   return{
