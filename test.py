@@ -2,6 +2,7 @@ import os
 import unittest
 import sys, json 
 import requests as r
+import logging
 
 from flask_sqlalchemy import SQLAlchemy
 from app import create_app
@@ -35,26 +36,27 @@ class CapstoneTestCase(unittest.TestCase):
         #Test for GET health endpoint
         res = self.client().get('/')
         data = json.loads(res.data)
+        logging.info(data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['message'], 'Finally, it works!!!')
 
+
     ##TEST FOR ACTORS
 
     def test_get_actors_without_token(self):
-        #res = self.client().get('http://localhost:5000/actors')
-        res = r.get('http://localhost:5000/actors')
-        print(res)
-        #data = json.loads(res.data)
+        res = self.client().get('/actors')
+        data = json.loads(res.data)
+
         self.assertEqual(res.status_code, 401)
-        #self.assertEqual(data['success'], False)
+        self.assertEqual(data['success'], False)
        
 
     def test_get_actors_with_valid_token(self):
         res = self.client().get(
             '/actors',
             headers={
-                "Authorization": "Bearer" + self.CASTING_ASSISTANT
+                "Authorization": "Bearer " + self.EXECUTIVE_PRODUCER
             }
         )
         data = json.loads(res.data)
@@ -62,16 +64,16 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
 
     def test_get_particular_actor_without_token(self):
-        res = self.client().get('/actors/5')
+        res = self.client().get('/actors/6')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
 
     def test_get_particular_actor_with_valid_token(self):
         res = self.client().get(
-            '/actors/5',
+            '/actors/6',
             headers={
-                "Authorization": "Bearer" + self.CASTING_ASSISTANT
+                "Authorization": "Bearer {}".format(self.CASTING_ASSISTANT)
             }
         )
         data = json.loads(res.data)
@@ -80,25 +82,27 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_create_actors_without_token(self):
         self.new_actor = {
-            "name": "new name",
-            "age": "new age",
-            "gender": "gender"
+            "name": "Denzel",
+            "age": 66,
+            "gender": "M"
         }
-        res = self.client().post('/actors/')
+        res = self.client().post('/actors/7')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
 
     def test_create_actor_with_valid_token(self):
         self.new_actor = {
-            "name": "new name",
-            "age": "new age",
-            "gender": "gender"
+            "name": "Denzel",
+            "age": 66,
+            "gender": "M"
         }
         res = self.client().post(
-            '/actors/7',
+            '/actors/10',
+            json=self.new_actor,
             headers={
-                "Authorization": "Bearer" + self.CASTING_DIRECTOR
+                "Authorization": "Bearer {}".format(self.CASTING_DIRECTOR),
+                "Content-Type": "application/json"
             }
         )
         data = json.loads(res.data)
@@ -108,7 +112,7 @@ class CapstoneTestCase(unittest.TestCase):
     def test_patch_actors_without_token(self):
         self.new_actor = {
             "name": "new name",
-            "age": "new age",
+            "age": "new age", 
             "gender": "gender"
         }
         res = self.client().patch('/actors/4')
@@ -118,14 +122,16 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_patch_actor_with_valid_token(self):
         self.new_actor = {
-            "name": "new name",
-            "age": "new age",
-            "gender": "gender"
+            "name": "Denzel",
+            "age": 40,
+            "gender": "M"
         }
         res = self.client().patch(
-            '/actors/4',
+            '/actors/2',
+            json=self.new_actor,
             headers={
-                "Authorization": "Bearer" + self.CASTING_DIRECTOR
+                "Authorization": "Bearer {}".format(self.CASTING_DIRECTOR),
+                "Content-Type": "application/json"
             }
         )
         data = json.loads(res.data)
@@ -140,11 +146,12 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_delete_actor_with_valid_token(self):
         res = self.client().delete(
-            '/actors/3',
+            '/actors/10',
             headers={
-                "Authorization": "Bearer" + self.CASTING_DIRECTOR
+                "Authorization": "Bearer " + self.CASTING_DIRECTOR
             }
         )
+
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -152,7 +159,7 @@ class CapstoneTestCase(unittest.TestCase):
     #### TESTS FOR MOVIES
 
     def test_get_movies_without_token(self):
-        res = self.client().get('/movies/')
+        res = self.client().get('/movies')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
@@ -161,7 +168,7 @@ class CapstoneTestCase(unittest.TestCase):
         res = self.client().get(
             '/movies',
             headers={
-                "Authorization": "Bearer" + self.CASTING_ASSISTANT
+                "Authorization": "Bearer " + self.CASTING_ASSISTANT
             }
         )
         data = json.loads(res.data)
@@ -178,7 +185,7 @@ class CapstoneTestCase(unittest.TestCase):
         res = self.client().get(
             '/movies/5',
             headers={
-                "Authorization": "Bearer" + self.CASTING_DIRECTOR
+                "Authorization": "Bearer " + self.CASTING_DIRECTOR
             }
         )
         data = json.loads(res.data)
@@ -190,7 +197,7 @@ class CapstoneTestCase(unittest.TestCase):
             "title": "new title",
             "release_year": "year"
         }
-        res = self.client().post('/moviess/')
+        res = self.client().post('/movies/7')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
@@ -198,12 +205,14 @@ class CapstoneTestCase(unittest.TestCase):
     def test_create_movie_with_valid_token(self):
         self.new_movie = {
             "title": "new title",
-            "release_year": "year"
+            "release_year": "2019-04-05 00:00:00"
         }
         res = self.client().post(
-            '/movies/7',
+            '/movies/3',
+            json=self.new_movie,
             headers={
-                "Authorization": "Bearer" + self.EXECUTIVE_PRODUCER
+                "Authorization": "Bearer " + self.EXECUTIVE_PRODUCER,
+                "Content-Type": "application/json"
             }
         )
         data = json.loads(res.data)
@@ -223,12 +232,14 @@ class CapstoneTestCase(unittest.TestCase):
     def test_patch_movie_with_valid_token(self):
         self.new_movie = {
             "title": "new title",
-            "release_year": "year"
+            "release_year": "2019-04-05 00:00:00"
         }
         res = self.client().patch(
             '/movies/4',
+            json=self.new_movie,
             headers={
-                "Authorization": "Bearer" + self.EXECUTIVE_PRODUCER
+                "Authorization": "Bearer " + self.EXECUTIVE_PRODUCER,
+                "Content-Type": "application/json"
             }
         )
         data = json.loads(res.data)
@@ -243,9 +254,9 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_delete_movie_with_valid_token(self):
         res = self.client().delete(
-            '/moviess/3',
+            '/movies/3',
             headers={
-                "Authorization": "Bearer" + self.EXECUTIVE_PRODUCER
+                "Authorization": "Bearer " + self.EXECUTIVE_PRODUCER
             }
         )
         data = json.loads(res.data)
@@ -255,6 +266,7 @@ class CapstoneTestCase(unittest.TestCase):
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     unittest.main(verbosity=2)
 
 

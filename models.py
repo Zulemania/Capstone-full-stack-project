@@ -82,30 +82,30 @@ class Movie(db.Model):
         'movies',
         lazy=True))
 
-def __init__(self, title, release_year):
-    self.title = title
-    self.release_year = release_year
+    def __init__(self, title, release_year):
+        self.title = title
+        self.release_year = release_year
 
 
-def insert(self):
-    db.session.add(self)
-    db.session.commit()
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
 
-def delete(self):
-    db.session.delete(self)
-    db.session.commit()
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
-def update(self):
-    db.session.commit()
+    def update(self):
+        db.session.commit()
 
-def __repr__(self):
-    return f'<{self.id} - {self.title} - {self.release_year}>'
+    def __repr__(self):
+        return f'<{self.id} - {self.title} - {self.release_year}>'
 
-def format(self):
-  return{
-    'id': self.id,
-    'title': self.title,
-    'release_year': self.release_year
-  }
+    def format(self):
+        return{
+            'id': self.id,
+            'title': self.title,
+            'release_year': self.release_year
+            }
 
 

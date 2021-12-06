@@ -1,4 +1,4 @@
-import os
+import os, sys
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from models import setup_db
@@ -41,8 +41,8 @@ def create_app(test_config=None):
     def get_all_actors(payload):
         try:
             actors_query = Actor.query.order_by(Actor.id).all()
-            actors = [actor.short() for actor in actors_query]
-            if not result:
+            actors = [actor.format() for actor in actors_query]
+            if not actors:
                 abort(400)
             return jsonify({
                 'success': True,
@@ -54,7 +54,7 @@ def create_app(test_config=None):
 
 
     @app.route('/actors/<int:id>', methods=['GET'])
-    @requires_auth("get:actors-info")
+    @requires_auth("get:actors-detail")
     def get_particular_actor(payload, id):
         actor = Actor.query.filter_by(id=id).one_or_none()
         if actor is None:
@@ -68,22 +68,26 @@ def create_app(test_config=None):
 
     @app.route('/actors/<int:id>', methods=['POST'])
     @requires_auth('post:actors')
-    def post_actor(payload):
-
+    def post_actor(payload, id):
         if request.method == 'POST':
             body = request.get_json()
             name = body.get('name', None)
             age = body.get('age', None)
             gender = body.get('gender', None)
 
-        actor = Actor(name=name, age=age, gender=gender)
-        actor.insert()
+            if not (name and age and gender):
+                abort(422)
+            try:
+                actor = Actor(name=name, age=age, gender=gender)
+                actor.insert()
 
-        return jsonify({
-            'success': True,
-            'created_actor': actor.name,
-            'total_actors': len(Actor.query.all())
-        }), 200
+                return jsonify({
+                    'success': True,
+                    'created_actor': actor.name,
+                    'total_actors': len(Actor.query.all())
+                })
+            except Exception:
+                abort(422)
 
     @app.route('/actors/<int:id>', methods=['PATCH'])
     @requires_auth('patch:actors')
@@ -129,8 +133,8 @@ def create_app(test_config=None):
     @app.route('/movies', methods=['Get'])
     @requires_auth("get:movies")
     def get_all_movies(payload):
-        movies = Movie.query.order_by(Movie.id).all()
-        movies = [movie.format() for movie in movies]
+        movies_query = Movie.query.order_by(Movie.id).all()
+        movies = [movie.format() for movie in movies_query]
         
 
         return jsonify({
@@ -139,7 +143,7 @@ def create_app(test_config=None):
         }), 200
 
     @app.route('/movies/<int:id>', methods=['GET'])
-    @requires_auth("get:movies-info")
+    @requires_auth("get:movies-detail")
     def get_particular_movie(payload, id):
         movie = Movie.query.filter_by(id=id).one_or_none()
 
@@ -152,15 +156,14 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:id>', methods=['POST'])
     @requires_auth('post:movies')
-    def post_movie(payload):
+    def post_movie(payload, id):
         if request.method == 'POST':
             body = request.get_json()
             title = body.get('title', None)
             release_year = body.get('release_year', None)
-            genre = body.get('genre', None)
 
-        movie = Movie(title=title, release_year=release_year, genre=genre)
-        movie.insert()
+            movie = Movie(title=title, release_year=release_year)
+            movie.insert()
 
         return jsonify({
             'success': True,
@@ -176,13 +179,15 @@ def create_app(test_config=None):
             body = request.get_json()
             title = body.get('title', None)
             release_year = body.get('release_year', None)
-            genre = body.get('genre', None)
+
+            movie = Movie.query.filter_by(id=id).one_or_none()
+
+            if movie is None:
+                abort(404)
 
 
             movie.title = title
             movie.release_year = release_year
-            movie.genre = genre
-
             movie.update()
 
             return jsonify({
@@ -207,6 +212,8 @@ def create_app(test_config=None):
             'total_movies': len(Movie.query.all())
         }), 200
 
+    ##ERROR HANDLING
+
     @app.errorhandler(400)
     def bad_request_error(error):
         return jsonify({
@@ -221,7 +228,7 @@ def create_app(test_config=None):
             "success": False,
             "error": 401,
             "message": "unauthorized request"
-        }), 404
+        }), 401
 
     @app.errorhandler(404)
     def not_found(error):
