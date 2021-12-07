@@ -3,5 +3,6 @@ __pycache__/
 .DS_Store
 .gitignore
 logfile
-app.pyc
+*.pyc
 .env
+.vscode/
