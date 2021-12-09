@@ -105,6 +105,88 @@ GET ' / '
 }
 ```
 
+GET '/actors'
+- Get all the actors on the list
+- requires "get:actors" authentication
+- Example request: curl -XGET -H "Authorization: Bearer ${CASTING_ASSISTANT}" https://film-magic.herokuapp.com/actors
+- Example request: curl -XGET -H "Authorization: Bearer ${EXECUTIVE_PRODUCER}" http://127.0.0.1:5000/actors
+- Example response:
+```
+{"actors":[
+    {
+        "gender":"M",
+        "id":2,
+        "name":"Denzel"
+    },
+    {
+        "gender":"M","id":3,
+        "name":"Mofesola Babalola"
+    },
+    {
+        "gender":"M",
+        "id":5,
+        "name":"Ed Helms"
+    },
+    {
+        "gender":"M",
+        "id":6,
+        "name":"Tom Hardy"
+    },
+    {
+        "gender":"M",
+        "id":7,
+        "name":"Denzel"
+    },
+    {
+        "gender":"M",
+        "id":8,
+        "name":"Denzel"
+    },
+    {
+        "gender":"M",
+        "id":9,
+        "name":"Denzel"
+    },
+    {
+        "gender":"M",
+        "id":11,
+        "name":"Denzel"
+    },
+    {
+        "gender":"M",
+        "id":12,
+        "name":"Denzel"
+    },
+    {
+        "gender":"M",
+        "id":13,
+        "name":"Denzel"
+    },
+    {
+        "gender":"M",
+        "id":14,
+        "name":"Denzel"
+    },
+    "success":true
+}
+```
+
+GET '/actors/{actor_id}
+- Get a particular actor on the list
+- requires "get:actors-detail" authentication
+- Example request: curl -XGET -H "Authorization: Bearer ${CASTING_ASSISTANT}" https://film-magic.herokuapp.com/actors/1
+- Example response:
+```
+{
+    "actor":{
+        "gender":"M",
+        "id":1,
+        "name":"Denzel"},
+    "success":true
+}
+```
+
+
 ## TESTING
 
 For testing the app, run the following commands () 
