@@ -189,7 +189,7 @@ GET '/actors/{actor_id}
 POST '/actors
 - Add a new actor to the list
 - requires "post:actor" permission
-- Example request: curl -XGET -H "Authorization: Bearer ${CASTING_DIRECTOR}" https://film-magic.herokuapp.com/actors
+- Example request: curl -XPOST -H "Authorization: Bearer ${CASTING_DIRECTOR}" https://film-magic.herokuapp.com/actors
 - Request Body:
 {
     "name": "Mofesola Babalola",
