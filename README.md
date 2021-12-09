@@ -107,7 +107,7 @@ GET ' / '
 
 GET '/actors'
 - Get all the actors on the list
-- requires "get:actors" authentication
+- requires "get:actors" permission
 - Example request: curl -XGET -H "Authorization: Bearer ${CASTING_ASSISTANT}" https://film-magic.herokuapp.com/actors
 - Example request: curl -XGET -H "Authorization: Bearer ${EXECUTIVE_PRODUCER}" http://127.0.0.1:5000/actors
 - Example response:
@@ -173,7 +173,7 @@ GET '/actors'
 
 GET '/actors/{actor_id}
 - Get a particular actor on the list
-- requires "get:actors-detail" authentication
+- requires "get:actors-detail" permission
 - Example request: curl -XGET -H "Authorization: Bearer ${CASTING_ASSISTANT}" https://film-magic.herokuapp.com/actors/1
 - Example response:
 ```
@@ -185,6 +185,139 @@ GET '/actors/{actor_id}
     "success":true
 }
 ```
+
+POST '/actors
+- Add a new actor to the list
+- requires "post:actor" permission
+- Example request: curl -XGET -H "Authorization: Bearer ${CASTING_DIRECTOR}" https://film-magic.herokuapp.com/actors
+- Request Body:
+{
+    "name": "Mofesola Babalola",
+    "age": 32,
+    "gender": 'M'
+
+}
+
+- Example Response:
+```
+{
+    "created_actor": "Mofesola Babalola
+    "success": true,
+    "total_actors": 16
+}
+```
+
+GET '/movies'
+- Get all the movies on the list
+- requires "get:movies" permission
+- Example request: curl -XGET -H "Authorization: Bearer ${CASTING_ASSISTANT}" https://film-magic.herokuapp.com/movies
+- Example request: curl -XGET -H "Authorization: Bearer ${EXECUTIVE_PRODUCER}" http://127.0.0.1:5000/actors
+- Example response:
+```
+{
+  "movies": [
+    {
+      "id": 2, 
+      "release_year": "Fri, 19 Apr 2019 00:00:00 GMT", 
+      "title": "Joker"
+    }, 
+    {
+      "id": 4, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "Eran Iya Osogbo"
+    }, 
+    {
+      "id": 5, 
+      "release_year": "Fri, 15 May 2015 00:00:00 GMT", 
+      "title": "Mad max"
+    }, 
+    {
+      "id": 6, 
+      "release_year": "Wed, 29 Jul 2015 00:00:00 GMT", 
+      "title": "Vacation"
+    }, 
+    {
+      "id": 7, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "Coming"
+    }, 
+    {
+      "id": 8, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "Coming"
+    }, 
+    {
+      "id": 9, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 11, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 12, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 13, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 14, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 15, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 16, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 17, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 18, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }, 
+    {
+      "id": 19, 
+      "release_year": "Fri, 05 Apr 2019 00:00:00 GMT", 
+      "title": "new title"
+    }
+  ], 
+  "success": true
+}
+
+
+GET '/movies/{movie_id}
+- Get a particular movie on the list
+- requires "get:movies-detail" permission
+- Example request: curl -XGET -H "Authorization: Bearer ${CASTING_ASSISTANT}" https://film-magic.herokuapp.com/movies/5
+- Example request: curl -XGET -H "Authorization: Bearer ${EXECUTIVE_PRODUCER}" http://localhost:5000/movies/5
+- Example response:
+```
+{
+    "movie":{
+        "id":5,
+        "release_year":"Fri, 15 May 2015 00:00:00 GMT",
+        "title":"Mad max"
+    },
+    "success":true
+}
+```
+
 
 
 ## TESTING
