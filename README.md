@@ -299,7 +299,7 @@ GET '/movies'
   ], 
   "success": true
 }
-
+```
 
 GET '/movies/{movie_id}
 - Get a particular movie on the list
@@ -307,6 +307,7 @@ GET '/movies/{movie_id}
 - Example request: curl -XGET -H "Authorization: Bearer ${CASTING_ASSISTANT}" https://film-magic.herokuapp.com/movies/5
 - Example request: curl -XGET -H "Authorization: Bearer ${EXECUTIVE_PRODUCER}" http://localhost:5000/movies/5
 - Example response:
+
 ```
 {
     "movie":{
