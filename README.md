@@ -201,9 +201,7 @@ POST '/actors
 - Example Response:
 ```
 {
-    "created_actor": "Mofesola Babalola
     "success": true,
-    "total_actors": 16
 }
 ```
 
