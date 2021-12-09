@@ -99,7 +99,7 @@ class CapstoneTestCase(unittest.TestCase):
             "gender": "M"
         }
         res = self.client().post(
-            '/actors/1',
+            '/actors/20',
             json=self.new_actor,
             headers={
                 "Authorization": "Bearer {}".format(self.CASTING_DIRECTOR),
@@ -147,7 +147,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_delete_actor_with_valid_token(self):
         res = self.client().delete(
-            '/actors/1',
+            '/actors/20',
             headers={
                 "Authorization": "Bearer " + self.CASTING_DIRECTOR
             }
@@ -205,11 +205,11 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_create_movie_with_valid_token(self):
         self.new_movie = {
-            "title": "new title",
+            "title": "Hell Bent",
             "release_year": "2019-04-05 00:00:00"
         }
         res = self.client().post(
-            '/movies/1',
+            '/movies/20',
             json=self.new_movie,
             headers={
                 "Authorization": "Bearer " + self.EXECUTIVE_PRODUCER,
@@ -255,7 +255,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     def test_delete_movie_with_valid_token(self):
         res = self.client().delete(
-            '/movies/10',
+            '/movies/20',
             headers={
                 "Authorization": "Bearer " + self.EXECUTIVE_PRODUCER
             }
