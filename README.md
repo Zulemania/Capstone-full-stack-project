@@ -17,11 +17,16 @@ These Roles include:
 
 I developed this project to use all the concepts and skill that I acquired in this programme to build an API and host it. By doing so, I gained more confidence in these skills.
 
+## PROJECT MOTIVATION
+
+- The primary motivation for this project was to use the hands-on knowledge that I acquired in this program to develop a functional app, thereby gaining more confidence in my skill set as a software engineer
+
 ## Capstone Project for Udacity's Full Stack Developer Nanodegree
 
 Heroku link: https://film-magic.herokuapp.com/
 
 Local host link: http://127.0.0.1:5000/
+
 
 ## SETUP
 
