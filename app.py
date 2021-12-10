@@ -1,5 +1,11 @@
-import os, sys
-from flask import Flask, jsonify, request, abort
+import os
+import sys
+from flask import (
+    Flask,
+    jsonify,
+    request,
+    abort
+)
 from flask_sqlalchemy import SQLAlchemy
 from models import setup_db
 from flask_cors import CORS
@@ -12,18 +18,15 @@ from functools import wraps
 from datetime import datetime
 
 
-
-
 def create_app(test_config=None):
 
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
 
-    #Uncomment the following line on the initial run to setup
-    #the required tables in the database
-    #db_drop_and_create_all()
-    
+# Uncomment the following line on the initial run to setup
+# the required tables in the database
+# db_drop_and_create_all()
 
     @app.route('/')
     def get_greeting():
@@ -31,7 +34,7 @@ def create_app(test_config=None):
             'success': True,
             'message': 'Finally, it works!!!'
         })
-        
+
     @app.route('/coolkids')
     def be_cool():
         return "Be cool, man, be coooool! You're almost a FSND grad!"
@@ -47,11 +50,9 @@ def create_app(test_config=None):
             return jsonify({
                 'success': True,
                 'actors': actors
-            }), 200 
+            }), 200
         except():
             abort(500)
-
-
 
     @app.route('/actors/<int:id>', methods=['GET'])
     @requires_auth("get:actors-detail")
@@ -63,8 +64,6 @@ def create_app(test_config=None):
             'success': True,
             'actor': actor.format()
         })
-
-
 
     @app.route('/actors/<int:id>', methods=['POST'])
     @requires_auth('post:actors')
@@ -109,10 +108,10 @@ def create_app(test_config=None):
             actor.update()
 
             return jsonify({
-            'success': True,
-            'updated_actor': id,
-            'total_actors': len(Actor.query.all())
-        })
+                'success': True,
+                'updated_actor': id,
+                'total_actors': len(Actor.query.all())
+            })
 
     @app.route('/actors/<int:id>', methods=['DELETE'])
     @requires_auth('delete:actors')
@@ -135,10 +134,9 @@ def create_app(test_config=None):
     def get_all_movies(payload):
         movies_query = Movie.query.order_by(Movie.id).all()
         movies = [movie.format() for movie in movies_query]
-        
 
         return jsonify({
-            'success':True,
+            'success': True,
             'movies': movies
         }), 200
 
@@ -171,7 +169,6 @@ def create_app(test_config=None):
             'total_actors': len(Movie.query.all())
         }), 200
 
-
     @app.route('/movies/<int:id>', methods=['PATCH'])
     @requires_auth('patch:movies')
     def patch_movie(payload, id):
@@ -185,16 +182,15 @@ def create_app(test_config=None):
             if movie is None:
                 abort(404)
 
-
             movie.title = title
             movie.release_year = release_year
             movie.update()
 
             return jsonify({
-            'success': True,
-            'updated_movie': id,
-            'total_movies': len(Movie.query.all())
-        })
+                'success': True,
+                'updated_movie': id,
+                'total_movies': len(Movie.query.all())
+            })
 
     @app.route('/movies/<int:id>', methods=['DELETE'])
     @requires_auth('delete:movies')
@@ -212,7 +208,7 @@ def create_app(test_config=None):
             'total_movies': len(Movie.query.all())
         }), 200
 
-    ##ERROR HANDLING
+# ERROR HANDLING
 
     @app.errorhandler(400)
     def bad_request_error(error):
@@ -262,16 +258,11 @@ def create_app(test_config=None):
             "message": "internal server error"
         }), 500
 
-
-
-
-
-
-
-
     return app
 
+
 app = create_app()
+
 
 if __name__ == '__main__':
     app.run()
